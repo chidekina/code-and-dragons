@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+@theme {
+  --color-gold: #f59e0b;
+  --color-stone: #44403c;
+  --color-dungeon: #1c1917;
+  --color-blood: #991b1b;
+}
+
+body {
+  background-color: #1c1917;
+  color: white;
+}
