@@ -26,10 +26,15 @@ export function completeLesson(lessonId, xp) {
   return state
 }
 
-export function saveCode(lessonId, code) {
+// Key format: "lessonId:language" — keeps JS and TS code separate
+export function saveCode(lessonId, code, language = 'javascript') {
   const state = load()
-  state.savedCode[lessonId] = code
+  state.savedCode[`${lessonId}:${language}`] = code
   save(state)
+}
+
+export function getSavedCode(lessonId, language = 'javascript') {
+  return load().savedCode[`${lessonId}:${language}`] ?? null
 }
 
 export function isCompleted(lessonId) {

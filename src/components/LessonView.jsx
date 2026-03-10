@@ -3,20 +3,30 @@ import Markdown from 'react-markdown'
 import { BookOpen } from 'lucide-react'
 import CodeEditor from './CodeEditor'
 import TestRunner from './TestRunner'
-import { saveCode, getProgress } from '../store/progress'
+import { saveCode, getSavedCode } from '../store/progress'
 
 const LANG_KEY = 'code-and-dragons-language'
 
+function getStarterCode(lesson, language) {
+  return language === 'typescript' && lesson.starterCodeTS
+    ? lesson.starterCodeTS
+    : lesson.starterCode
+}
+
 export default function LessonView({ lesson, onComplete }) {
-  const [code, setCode] = useState('')
   const [language, setLanguage] = useState(
     () => localStorage.getItem(LANG_KEY) ?? 'javascript'
   )
+  const [code, setCode] = useState(
+    () => getSavedCode(lesson.id, localStorage.getItem(LANG_KEY) ?? 'javascript')
+      ?? getStarterCode(lesson, localStorage.getItem(LANG_KEY) ?? 'javascript')
+  )
 
+  // When lesson or language changes, load saved code or starter code
   useEffect(() => {
-    const saved = getProgress().savedCode[lesson.id]
-    setCode(saved ?? lesson.starterCode)
-  }, [lesson.id])
+    const saved = getSavedCode(lesson.id, language)
+    setCode(saved ?? getStarterCode(lesson, language))
+  }, [lesson.id, language])
 
   function handleLanguageChange(lang) {
     setLanguage(lang)
@@ -25,7 +35,7 @@ export default function LessonView({ lesson, onComplete }) {
 
   function handleCodeChange(val) {
     setCode(val ?? '')
-    saveCode(lesson.id, val ?? '')
+    saveCode(lesson.id, val ?? '', language)
   }
 
   function handleAllPassed() {
