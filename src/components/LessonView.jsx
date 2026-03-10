@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import Markdown from 'react-markdown'
 import CodeEditor from './CodeEditor'
 import TestRunner from './TestRunner'
 import { saveCode, getProgress } from '../store/progress'
@@ -32,7 +33,9 @@ export default function LessonView({ lesson, onComplete }) {
 
         <div className="bg-dungeon border border-stone rounded p-4">
           <h3 className="text-gold font-bold mb-2">📜 Teoria</h3>
-          <div className="text-stone-300 text-sm leading-relaxed whitespace-pre-line">{lesson.theory.trim()}</div>
+          <div className="text-stone-300 text-sm leading-relaxed prose prose-invert prose-sm max-w-none">
+            <Markdown>{lesson.theory.trim()}</Markdown>
+          </div>
         </div>
       </div>
 
