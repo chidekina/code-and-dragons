@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { lessons } from './lessons/index'
 import ProgressMap from './components/ProgressMap'
 import LessonView from './components/LessonView'
+import MobileNav from './components/MobileNav'
 import { completeLesson, getProgress } from './store/progress'
 
 export default function App() {
@@ -19,7 +20,10 @@ export default function App() {
     <div className="min-h-screen bg-dungeon text-white flex flex-col">
       <header className="border-b border-stone px-4 py-3 flex items-center justify-between">
         <h1 className="text-gold font-bold text-xl">⚔️ Code & Dragons</h1>
-        <span className="text-sm text-stone-400">✨ {progress.xp} XP</span>
+        <div className="flex items-center gap-3">
+          <MobileNav lessons={lessons} onSelect={setCurrent} currentId={current.id} />
+          <span className="text-sm text-stone-400">✨ {progress.xp} XP</span>
+        </div>
       </header>
 
       <div className="flex flex-1 overflow-hidden">
