@@ -29,6 +29,18 @@ class Blacksmith {
 // Exporte as 3 classes para os testes funcionarem:
 // export { Blacksmith, Temperer, Merchant }
 `,
+  starterCodeTS: `// A classe Blacksmith faz tudo — forjar, temperar e vender.
+// TODO: Separe em 3 classes: Blacksmith (forja), Temperer (tempera), Merchant (vende)
+
+class Blacksmith {
+  forge(material: string): string { return \`\${material} forjado\`; }
+  temper(blade: string): string { return \`\${blade} temperado\`; }
+  sell(item: string): string { return \`\${item} vendido por 10 moedas\`; }
+}
+
+// Exporte as 3 classes para os testes funcionarem:
+// export { Blacksmith, Temperer, Merchant }
+`,
   tests: [
     {
       name: 'Blacksmith só forja',

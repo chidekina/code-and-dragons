@@ -34,6 +34,22 @@ class ElvenArcher extends Archer {
 
 // export { Archer, ElvenArcher }
 `,
+  starterCodeTS: `// ElvenArcher quebra o LSP — lança erro em vez de atirar.
+// TODO: Corrija ElvenArcher para que seja substituível por Archer.
+
+class Archer {
+  shoot(): string { return 'Flecha disparada: 15 dano'; }
+  reload(): string { return 'Arco recarregado'; }
+}
+
+class ElvenArcher extends Archer {
+  shoot(): string {
+    throw new Error('Elfos não atiram flechas comuns!'); // quebra LSP!
+  }
+}
+
+// export { Archer, ElvenArcher }
+`,
   tests: [
     {
       name: 'ElvenArcher.shoot() não lança erro',

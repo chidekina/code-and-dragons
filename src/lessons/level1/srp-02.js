@@ -26,6 +26,21 @@ class SpellBook {
 
 // export { DamageCalculator, Logger, ReportFormatter }
 `,
+  starterCodeTS: `// TODO: Separe em 3 classes:
+// DamageCalculator — calcula dano
+// Logger — salva logs
+// ReportFormatter — formata relatório
+
+interface Spell { power: number }
+
+class SpellBook {
+  calculateDamage(spell: Spell, level: number): number { return spell.power * level; }
+  log(message: string): string { console.log(\`[LOG] \${message}\`); return message; }
+  formatReport(data: object): string { return \`Relatório: \${JSON.stringify(data)}\`; }
+}
+
+// export { DamageCalculator, Logger, ReportFormatter }
+`,
   tests: [
     {
       name: 'DamageCalculator calcula dano corretamente',

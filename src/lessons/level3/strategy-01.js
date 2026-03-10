@@ -26,6 +26,19 @@ sem alterar a classe que o usa.
 
 // export { Hero, AttackStrategy, DefendStrategy, FleeStrategy }
 `,
+  starterCodeTS: `// TODO: Crie 3 estratégias: AttackStrategy, DefendStrategy, FleeStrategy
+// Cada uma com método execute(): string.
+// Crie Hero com:
+//   - construtor que aceita uma strategy: CombatStrategy
+//   - método setStrategy(strategy: CombatStrategy): void
+//   - método act(): string que delega para strategy.execute()
+
+interface CombatStrategy {
+  execute(): string;
+}
+
+// export { Hero, AttackStrategy, DefendStrategy, FleeStrategy }
+`,
   tests: [
     {
       name: 'Hero.act() usa a estratégia atual',

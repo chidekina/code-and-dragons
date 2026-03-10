@@ -23,6 +23,17 @@ encapsula a lógica de criação e retorna o objeto correto.
 
 // export { SpellFactory, FireSpell, IceSpell, LightningSpell }
 `,
+  starterCodeTS: `// TODO: Crie as classes FireSpell, IceSpell, LightningSpell
+// com método cast(): string retornando uma string descrevendo o efeito.
+// Crie SpellFactory com método estático create(type: string) que retorna
+// a instância correta baseada no tipo ('fire', 'ice', 'lightning').
+
+abstract class Spell {
+  abstract cast(): string;
+}
+
+// export { SpellFactory, FireSpell, IceSpell, LightningSpell }
+`,
   tests: [
     {
       name: "SpellFactory.create('fire') retorna FireSpell",

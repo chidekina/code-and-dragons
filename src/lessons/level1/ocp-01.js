@@ -29,6 +29,21 @@ class ArsenalBad {
 
 // export { Weapon, Sword, Bow, MagicStaff }
 `,
+  starterCodeTS: `// O método attack() usa if/else para cada arma — ruim!
+// TODO: Crie uma classe base Weapon com método attack()
+// e estenda com Sword, Bow e MagicStaff sem modificar a classe base.
+
+class ArsenalBad {
+  attack(weaponType: string): string {
+    if (weaponType === 'sword') return 'Corte com espada: 20 dano';
+    if (weaponType === 'bow') return 'Flecha: 15 dano';
+    if (weaponType === 'staff') return 'Magia: 30 dano';
+    return '';
+  }
+}
+
+// export { Weapon, Sword, Bow, MagicStaff }
+`,
   tests: [
     {
       name: 'Sword estende Weapon e retorna dano',

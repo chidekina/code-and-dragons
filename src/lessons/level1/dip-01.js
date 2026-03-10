@@ -35,6 +35,26 @@ class Hero {
 
 // export { Weapon, LightSword, HeavySword, Hero }
 `,
+  starterCodeTS: `// O Hero depende diretamente de LightSword — ruim!
+// TODO: Faça Hero depender de uma abstração Weapon.
+// Crie a classe base Weapon com método attack(): string.
+// Crie LightSword e HeavySword que estendem Weapon.
+// Hero recebe qualquer Weapon no construtor.
+
+class LightSword {
+  attack(): string { return 'Ataque leve: 10 dano'; }
+}
+
+class Hero {
+  private weapon: LightSword;
+  constructor() {
+    this.weapon = new LightSword(); // dependência concreta!
+  }
+  fight(): string { return this.weapon.attack(); }
+}
+
+// export { Weapon, LightSword, HeavySword, Hero }
+`,
   tests: [
     {
       name: 'Hero aceita qualquer Weapon no construtor',
