@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Map, X } from 'lucide-react'
 import ProgressMap from './ProgressMap'
 
 export default function MobileNav({ lessons, onSelect, currentId }) {
@@ -12,7 +13,8 @@ export default function MobileNav({ lessons, onSelect, currentId }) {
         aria-expanded={open}
         className="md:hidden cursor-pointer px-3 py-2 text-gold border border-stone rounded hover:border-gold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
       >
-        ☰ Mapa
+        <Map className="w-4 h-4 me-1.5" aria-hidden="true" />
+        Mapa
       </button>
 
       {open && (
@@ -31,7 +33,7 @@ export default function MobileNav({ lessons, onSelect, currentId }) {
                 aria-label="Fechar mapa"
                 className="cursor-pointer text-stone-400 hover:text-white transition-colors p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold rounded"
               >
-                ✕
+                <X className="w-4 h-4" aria-hidden="true" />
               </button>
             </div>
             <ProgressMap lessons={lessons} onSelect={(l) => { onSelect(l); setOpen(false) }} currentId={currentId} />

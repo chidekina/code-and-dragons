@@ -1,16 +1,27 @@
 import { useState, useEffect } from 'react'
 import Markdown from 'react-markdown'
+import { BookOpen } from 'lucide-react'
 import CodeEditor from './CodeEditor'
 import TestRunner from './TestRunner'
 import { saveCode, getProgress } from '../store/progress'
 
+const LANG_KEY = 'code-and-dragons-language'
+
 export default function LessonView({ lesson, onComplete }) {
   const [code, setCode] = useState('')
+  const [language, setLanguage] = useState(
+    () => localStorage.getItem(LANG_KEY) ?? 'javascript'
+  )
 
   useEffect(() => {
     const saved = getProgress().savedCode[lesson.id]
     setCode(saved ?? lesson.starterCode)
   }, [lesson.id])
+
+  function handleLanguageChange(lang) {
+    setLanguage(lang)
+    localStorage.setItem(LANG_KEY, lang)
+  }
 
   function handleCodeChange(val) {
     setCode(val ?? '')
@@ -32,7 +43,10 @@ export default function LessonView({ lesson, onComplete }) {
         </section>
 
         <section aria-label="Teoria" className="bg-dungeon border border-stone rounded p-4">
-          <h3 className="text-gold font-bold mb-2">📜 Teoria</h3>
+          <h3 className="text-gold font-bold mb-2 flex items-center gap-2">
+            <BookOpen className="w-4 h-4" aria-hidden="true" />
+            Teoria
+          </h3>
           <div className="text-stone-300 text-sm leading-relaxed prose prose-invert prose-sm max-w-none">
             <Markdown>{lesson.theory.trim()}</Markdown>
           </div>
@@ -41,8 +55,18 @@ export default function LessonView({ lesson, onComplete }) {
 
       {/* Right: Editor + Tests */}
       <section aria-label="Editor de código e testes" className="md:w-1/2 flex flex-col gap-4">
-        <CodeEditor value={code} onChange={handleCodeChange} />
-        <TestRunner code={code} tests={lesson.tests} onAllPassed={handleAllPassed} />
+        <CodeEditor
+          value={code}
+          onChange={handleCodeChange}
+          language={language}
+          onLanguageChange={handleLanguageChange}
+        />
+        <TestRunner
+          code={code}
+          tests={lesson.tests}
+          language={language}
+          onAllPassed={handleAllPassed}
+        />
       </section>
     </div>
   )

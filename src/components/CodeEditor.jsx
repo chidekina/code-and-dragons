@@ -1,20 +1,46 @@
 import Editor from '@monaco-editor/react'
 
-export default function CodeEditor({ value, onChange }) {
+export default function CodeEditor({ value, onChange, language, onLanguageChange }) {
   return (
-    <Editor
-      height="400px"
-      defaultLanguage="javascript"
-      theme="vs-dark"
-      value={value}
-      onChange={onChange}
-      options={{
-        fontSize: 14,
-        minimap: { enabled: false },
-        scrollBeyondLastLine: false,
-        lineNumbers: 'on',
-        tabSize: 2,
-      }}
-    />
+    <div className="flex flex-col gap-0">
+      {/* Language toggle */}
+      <div className="flex items-center gap-1 bg-[#1e1e1e] border-b border-white/10 px-3 py-1.5 rounded-t">
+        <span className="text-xs text-stone-500 me-2">Linguagem:</span>
+        {['javascript', 'typescript'].map(lang => (
+          <button
+            key={lang}
+            onClick={() => onLanguageChange(lang)}
+            aria-pressed={language === lang}
+            className={`
+              cursor-pointer text-xs px-2.5 py-1 rounded font-mono font-medium transition-colors
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold
+              ${language === lang
+                ? 'bg-gold text-dungeon'
+                : 'text-stone-400 hover:text-white hover:bg-white/10'}
+            `}
+          >
+            {lang === 'javascript' ? 'JS' : 'TS'}
+          </button>
+        ))}
+        {language === 'typescript' && (
+          <span className="ms-auto text-xs text-stone-500 italic">tipos são removidos antes dos testes</span>
+        )}
+      </div>
+
+      <Editor
+        height="380px"
+        language={language}
+        theme="vs-dark"
+        value={value}
+        onChange={onChange}
+        options={{
+          fontSize: 14,
+          minimap: { enabled: false },
+          scrollBeyondLastLine: false,
+          lineNumbers: 'on',
+          tabSize: 2,
+        }}
+      />
+    </div>
   )
 }
