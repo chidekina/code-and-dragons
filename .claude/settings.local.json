@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git push:*)",
+      "Bash(GIT_SSH_COMMAND=\"ssh\" git push git@github.com:chidekina/code-and-dragons.git main:main)",
+      "Bash(git config:*)"
+    ]
+  }
+}

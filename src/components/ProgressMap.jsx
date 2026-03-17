@@ -4,7 +4,7 @@ import { isCompleted, isUnlocked } from '../store/progress'
 export default function ProgressMap({ lessons, onSelect, currentId }) {
   return (
     <div className="flex flex-col gap-2 p-4">
-      <h2 className="text-gold font-bold text-lg mb-2 flex items-center gap-2">
+      <h2 className="text-gold font-bold text-lg mb-2 flex items-center gap-2 gold-glow" style={{fontFamily: "'IM Fell English', Georgia, serif"}}>
         <Sword className="w-4 h-4" aria-hidden="true" />
         Mapa do Dungeon
       </h2>
@@ -23,7 +23,7 @@ export default function ProgressMap({ lessons, onSelect, currentId }) {
             className={`
               text-left p-3 rounded border transition-colors
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-1 focus-visible:ring-offset-dungeon
-              ${current ? 'border-gold bg-stone text-white' : ''}
+              ${current ? 'border-gold bg-stone text-white gold-glow' : ''}
               ${completed ? 'border-green-700 bg-green-950 text-green-300' : ''}
               ${unlocked && !completed && !current ? 'border-stone bg-dungeon text-stone-300 hover:border-gold cursor-pointer' : ''}
               ${!unlocked ? 'border-stone-800 bg-stone-950 text-stone-600 cursor-not-allowed opacity-50' : ''}
