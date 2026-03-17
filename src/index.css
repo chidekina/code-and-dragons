@@ -1,11 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap');
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --color-gold: #f59e0b;
+  --color-gold: oklch(0.72 0.16 75);
+  --color-gold-dim: oklch(0.55 0.12 75);
   --color-stone: #44403c;
-  --color-dungeon: #1c1917;
-  --color-blood: #991b1b;
+  --color-dungeon: #0f0d0b;
+  --color-dungeon-mid: #1a1714;
+  --color-blood: #7f1d1d;
+  --color-parchment: oklch(0.88 0.04 85);
 }
 
 html {
@@ -15,8 +19,59 @@ html {
 }
 
 body {
-  background-color: #1c1917;
+  background-color: #0f0d0b;
   color: white;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.65) 100%);
+}
+
+@keyframes torch-flicker {
+  0%, 100% { opacity: 1; }
+  20% { opacity: 0.93; }
+  40% { opacity: 0.98; }
+  60% { opacity: 0.90; }
+  80% { opacity: 0.96; }
+}
+
+.torch-glow {
+  animation: torch-flicker 4s ease-in-out infinite;
+  background: radial-gradient(ellipse 140% 80% at 50% 0%, oklch(0.72 0.16 75 / 0.10) 0%, transparent 65%) !important;
+}
+
+.gold-glow {
+  text-shadow: 0 0 20px oklch(0.72 0.16 75 / 0.7), 0 0 50px oklch(0.72 0.16 75 / 0.25);
+}
+
+@keyframes xp-float {
+  0% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-50px) scale(1.2); }
+}
+
+.xp-float {
+  animation: xp-float 1.2s ease-out forwards;
+  position: absolute;
+  pointer-events: none;
+  color: oklch(0.72 0.16 75);
+  font-weight: bold;
+  font-size: 1.1rem;
 }
 
 @media (prefers-reduced-motion: reduce) {

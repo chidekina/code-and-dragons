@@ -26,15 +26,15 @@ export default function App() {
         Ir para conteúdo
       </a>
 
-      <header role="banner" className="border-b border-stone px-4 py-3 flex items-center justify-between">
-        <h1 className="text-gold font-bold text-xl">⚔️ Code & Dragons</h1>
+      <header role="banner" className="torch-glow border-b border-stone px-4 py-3 flex items-center justify-between" style={{position: 'relative', zIndex: 2}}>
+        <h1 className="text-gold font-bold text-xl gold-glow" style={{fontFamily: "'IM Fell English', Georgia, serif"}}>⚔️ Code & Dragons</h1>
         <div className="flex items-center gap-3">
           <MobileNav lessons={lessons} onSelect={setCurrent} currentId={current.id} />
-          <span className="text-sm text-stone-400 tabular-nums">✨ {progress.xp} XP</span>
+          <span className="text-sm tabular-nums" style={{fontFamily: "'IM Fell English', serif", color: 'oklch(0.72 0.16 75)'}}>✨ {progress.xp} XP</span>
         </div>
       </header>
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden" style={{position: 'relative', zIndex: 2}}>
         <aside aria-label="Mapa do dungeon" className="hidden md:block w-64 border-r border-stone overflow-y-auto shrink-0">
           <ProgressMap lessons={lessons} onSelect={setCurrent} currentId={current.id} />
         </aside>
