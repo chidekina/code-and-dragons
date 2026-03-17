@@ -1,34 +1,55 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { CheckCircle2, XCircle, Loader2, Wand2, PartyPopper } from 'lucide-react'
 
+function stripTS(code) {
+  return code
+    .split('\n')
+    // remove standalone abstract method declarations: "  abstract foo(): string;"
+    .filter(line => !/^\s*abstract\s+\w+.*;\s*$/.test(line))
+    // remove typed field declarations: "  private x: Type" or "  name: string"
+    .filter(line => !/^\s*(private|public|protected|readonly)\s+\w+(\??)\s*:\s*\w/.test(line))
+    .filter(line => !/^\s*\w+(\??)\s*:\s*(string|number|boolean|void|any|never|unknown)\s*[;=]/.test(line))
+    .join('\n')
+    .replace(/\babstract\s+/g, '')
+    .replace(/\b(private|public|protected|readonly)\s+(?=\w)/g, '')
+    .replace(/\bdeclare\s+/g, '')
+    .replace(/\binterface\s+\w+\s*\{[^}]*\}/gs, '')
+    // return type annotations: "): Spell {" or "): string {"
+    .replace(/\)\s*:\s*\w+(\[\])?\s*(?=[{;,])/g, ') ')
+    // parameter type annotations: "(type: string)" or "(weapon: Weapon)"
+    .replace(/(\w+)\s*\??\s*:\s*[\w<>\[\]|& ]+(?=[,)])/g, '$1')
+    // variable type annotations: "const x: Foo ="
+    .replace(/:\s*(string|number|boolean|void|object|any|never|unknown)(\[\])?\b/g, '')
+    .replace(/<[A-Z]\w*>/g, '')
+}
+
 async function transpileTS(code) {
-  try {
-    // Monaco bundles the TS compiler — use it to strip types
-    const monaco = await import('monaco-editor')
-    const uri = monaco.Uri.parse('file:///lesson.ts')
-    const existing = monaco.editor.getModel(uri)
-    const model = existing ?? monaco.editor.createModel(code, 'typescript', uri)
-    if (existing) monaco.editor.getModel(uri).setValue(code)
-    const worker = await monaco.languages.typescript.getTypeScriptWorker()
-    const client = await worker(uri)
-    const output = await client.getEmitOutput(uri.toString())
-    const jsCode = output.outputFiles[0]?.text ?? code
-    if (!existing) model.dispose()
-    return jsCode
-  } catch {
-    // Fallback: naive type stripping (removes : Type annotations and <T> generics)
-    return code
-      .replace(/:\s*[\w<>\[\]|&{}(),\s]+(?=[=,);{])/g, '')
-      .replace(/<[A-Z]\w*>/g, '')
-  }
+  return stripTS(code)
+}
+
+function stripESM(code) {
+  return code
+    // export class Foo / export function foo / export const foo = ...
+    .replace(/\bexport\s+(default\s+)?(?=class|function|const|let|var)/g, '')
+    // export { Foo, Bar, Baz } — collect names then remove the block
+    .replace(/export\s*\{[^}]*\}\s*;?/g, (match) => {
+      // inject exports.X = X for each name found
+      const names = [...match.matchAll(/\b(\w+)\b/g)]
+        .map(m => m[1])
+        .filter(n => n !== 'export')
+      return names.map(n => `exports.${n} = ${n};`).join('\n')
+    })
+    // export default SomeName
+    .replace(/\bexport\s+default\s+(\w+)\s*;?/g, 'exports.default = $1;')
 }
 
 async function runTests(code, tests, language) {
   const runnable = language === 'typescript' ? await transpileTS(code) : code
+  const prepared = stripESM(runnable)
   return tests.map(test => {
     try {
       const exports = {}
-      const fn = new Function('exports', runnable)
+      const fn = new Function('exports', prepared)
       fn(exports)
       test.fn(exports)
       return { name: test.name, passed: true, error: null }
@@ -38,24 +59,30 @@ async function runTests(code, tests, language) {
   })
 }
 
+const DISMISS_MS = 5000
+
 export default function TestRunner({ code, tests, language = 'javascript', onAllPassed }) {
   const [results, setResults] = useState(null)
   const [showSuccess, setShowSuccess] = useState(false)
   const [running, setRunning] = useState(false)
+  const timerRef = useRef(null)
+
+  useEffect(() => () => clearTimeout(timerRef.current), [])
 
   async function handleRun() {
+    clearTimeout(timerRef.current)
     setShowSuccess(false)
     setRunning(true)
     const res = await runTests(code, tests, language)
     setResults(res)
     setRunning(false)
-    if (res.every(r => r.passed)) {
+    const allPassed = res.every(r => r.passed)
+    if (allPassed) {
       setShowSuccess(true)
       onAllPassed?.()
     }
+    timerRef.current = setTimeout(() => { setResults(null); setShowSuccess(false) }, DISMISS_MS)
   }
-
-  const allPassed = results && results.every(r => r.passed)
 
   return (
     <div className="flex flex-col gap-3">
