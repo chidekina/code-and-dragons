@@ -49,8 +49,13 @@ async function runTests(code, tests, language) {
   return tests.map(test => {
     try {
       const exports = {}
-      const fn = new Function('exports', prepared)
-      fn(exports)
+      // Shadow browser globals so student code can't wipe the DOM
+      const fn = new Function(
+        'exports', 'window', 'document', 'globalThis', 'self',
+        'location', 'history', 'navigator', 'alert', 'confirm', 'prompt',
+        prepared
+      )
+      fn(exports, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined)
       test.fn(exports)
       return { name: test.name, passed: true, error: null }
     } catch (err) {
