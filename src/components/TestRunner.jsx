@@ -24,7 +24,12 @@ function stripTS(code) {
 }
 
 async function transpileTS(code) {
-  return stripTS(code)
+  const stripped = stripTS(code)
+  // Detect leftover TS syntax that stripTS couldn't remove
+  if (/:\s*[A-Z]\w*[\w<>\[\]|& ]*(?=[,);{])/.test(stripped)) {
+    throw new Error('Tipo TypeScript avançado detectado. Simplifique as anotações de tipo ou use JavaScript.')
+  }
+  return stripped
 }
 
 function stripESM(code) {

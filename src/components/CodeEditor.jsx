@@ -1,4 +1,24 @@
+import { Component } from 'react'
 import Editor from '@monaco-editor/react'
+
+class EditorBoundary extends Component {
+  constructor(props) { super(props); this.state = { failed: false } }
+  static getDerivedStateFromError() { return { failed: true } }
+  render() {
+    if (this.state.failed) {
+      return (
+        <textarea
+          className="w-full h-[380px] bg-[#1e1e1e] text-white font-mono text-sm p-3 resize-none border border-stone/30 rounded-b focus:outline-none"
+          value={this.props.value}
+          onChange={e => this.props.onChange(e.target.value)}
+          spellCheck={false}
+          aria-label="Editor de código (fallback)"
+        />
+      )
+    }
+    return this.props.children
+  }
+}
 
 export default function CodeEditor({ value, onChange, language, onLanguageChange }) {
   return (
@@ -27,20 +47,22 @@ export default function CodeEditor({ value, onChange, language, onLanguageChange
         )}
       </div>
 
-      <Editor
-        height="380px"
-        language={language}
-        theme="vs-dark"
-        value={value}
-        onChange={onChange}
-        options={{
-          fontSize: 14,
-          minimap: { enabled: false },
-          scrollBeyondLastLine: false,
-          lineNumbers: 'on',
-          tabSize: 2,
-        }}
-      />
+      <EditorBoundary value={value} onChange={onChange}>
+        <Editor
+          height="380px"
+          language={language}
+          theme="vs-dark"
+          value={value}
+          onChange={onChange}
+          options={{
+            fontSize: 14,
+            minimap: { enabled: false },
+            scrollBeyondLastLine: false,
+            lineNumbers: 'on',
+            tabSize: 2,
+          }}
+        />
+      </EditorBoundary>
     </div>
   )
 }
