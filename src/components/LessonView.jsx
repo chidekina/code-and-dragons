@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Markdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import { BookOpen } from 'lucide-react'
 import CodeEditor from './CodeEditor'
 import TestRunner from './TestRunner'
@@ -58,7 +59,7 @@ export default function LessonView({ lesson, onComplete }) {
             Teoria
           </h3>
           <div className="text-stone-300 text-sm leading-relaxed prose prose-invert prose-sm max-w-none">
-            <Markdown>{lesson.theory.trim()}</Markdown>
+            <Markdown remarkPlugins={[remarkGfm]}>{lesson.theory.trim()}</Markdown>
           </div>
         </section>
       </div>

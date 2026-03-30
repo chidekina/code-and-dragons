@@ -10,6 +10,7 @@ export default function App() {
   const [progress, setProgress] = useState(getProgress())
 
   function handleComplete(lessonId, xp) {
+    if (progress.completed.includes(lessonId)) return
     const updated = completeLesson(lessonId, xp)
     setProgress(updated)
     const idx = lessons.findIndex(l => l.id === lessonId)
